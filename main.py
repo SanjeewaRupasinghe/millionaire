@@ -1,6 +1,24 @@
 from tkinter import *
 
+
+def abc(id):
+    print(id)
+
+
+def select(event):
+    evWidget = event.widget
+    value = evWidget["text"]
+
+    if value == correctAnswer[0]:
+        questionArea.delete(1.0, END)
+        questionArea.insert(END, question[1])
+        optionOneButton.config(text=optionOne[1],command=lambda: abc(optionOne[1]))
+        optionTwoButton.config(text=optionTwo[1],command=lambda: abc(optionTwo[1]))
+        optionThreeButton.config(text=optionThree[1],command=lambda: abc(optionThree[1]))
+        optionFourButton.config(text=optionFour[1],command=lambda: abc(optionFour[1]))
+
 # QUESTIONS
+
 
 question = [
     "What is the capital city of Australia?",
@@ -41,6 +59,7 @@ correctAnswer = [
 root = Tk()
 
 root.geometry("1000x600+0+0")
+root.resizable(False, False)
 root.title("who wants to be a millionaire")
 
 root.config(background="black")
@@ -94,30 +113,32 @@ questionArea.insert(END, question[0])
 aLabel = Label(bottomLeftFrame, text="A: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 aLabel.place(x=55, y=110)
 optionOneButton = Button(bottomLeftFrame, text=optionOne[0], bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
-                         activebackground='black', activeforeground='white',cursor='hand2')
+                         activebackground='black', activeforeground='white', cursor='hand2')
 optionOneButton.place(x=80, y=107)
-
 
 bLabel = Label(bottomLeftFrame, text="B: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 bLabel.place(x=335, y=110)
 optionTwoButton = Button(bottomLeftFrame, text=optionTwo[0], bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
-                         activebackground='black', activeforeground='white',cursor='hand2')
+                         activebackground='black', activeforeground='white', cursor='hand2')
 optionTwoButton.place(x=360, y=107)
-
 
 cLabel = Label(bottomLeftFrame, text="C: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 cLabel.place(x=55, y=190)
-optionThreeButton = Button(bottomLeftFrame, text=optionThree[0], bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
-                         activebackground='black', activeforeground='white',cursor='hand2')
+optionThreeButton = Button(bottomLeftFrame, text=optionThree[0], bg="black", font=('arial', 14, 'bold'), fg="white",
+                           bd=0,
+                           activebackground='black', activeforeground='white', cursor='hand2')
 optionThreeButton.place(x=80, y=187)
-
 
 dLabel = Label(bottomLeftFrame, text="D: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 dLabel.place(x=335, y=190)
 optionFourButton = Button(bottomLeftFrame, text=optionFour[0], bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
-                         activebackground='black', activeforeground='white',cursor='hand2')
+                          activebackground='black', activeforeground='white', cursor='hand2')
 optionFourButton.place(x=360, y=187)
 
+optionOneButton.bind('<Button-1>', select)
+optionTwoButton.bind('<Button-1>', select)
+optionThreeButton.bind('<Button-1>', select)
+optionFourButton.bind('<Button-1>', select)
 
 rightFrame = Frame(root)
 rightFrame.grid(row=0, column=1)
