@@ -12,6 +12,7 @@ selectedIds = []
 questionArray = []
 
 
+# CHANGE questionArray BY CHECKING lang VARIABLE
 def languageCheck():
     global questionArray
     if lang == "en":
@@ -310,24 +311,27 @@ def languageCheck():
         ]
 
 
+# INITIAL SET questionArray
 languageCheck()
 
 # INITIATE MIXER
 mixer.init()
 
 
-# BACKGROUND SOUND
-def playBackgroudMusic():
+# BACKGROUND SOUND PLAY
+def playBackgroundMusic():
     mixer.music.load('images/kbc.mp3')
     mixer.music.play(-1)
 
 
+# BACKGROUND SOUND PAUSE
 def pauseBackgroundMusic():
     # mixer.music.load('images/kbc.mp3')
     mixer.music.pause()
 
 
-# playBackgroudMusic()
+# INITIAL BACKGROUND SOUND PLAY
+playBackgroundMusic()
 
 # INITIATE TEXT TO SPEECH
 engine = pyttsx3.init()
@@ -335,6 +339,7 @@ voices = engine.getProperty('voices')
 engine.setProperty('voices', voices[0].id)
 
 
+# START AGAIN GAME
 def tryAgain(window):
     # DESTROY CHILD WINDOW
     window.destroy()
@@ -345,6 +350,7 @@ def tryAgain(window):
     lifeLineAudienceButton.config(image=imageAudiencePole, state=ACTIVE)
     lifeLineCallButton.config(image=imageCaller, state=ACTIVE)
 
+    # SET LANGUAGE
     languageCheck()
 
     # SHOW AGAIN QUESTION
@@ -352,22 +358,30 @@ def tryAgain(window):
     print(lang)
 
     # BACKGROUND MUSIC
-    # playBackgroudMusic()
+    playBackgroundMusic()
 
+
+# CLOSE WINDOW IN LANGUAGE AND SOUND SETTINGS
 def closeWindow(window):
     window.destroy()
 
+
+# CHANGE LANGUAGE SETTING
 def changeLanguage():
+    # CHANGE GLOBAL lang VARIABLE
     def change(language):
         global lang
         lang = language
+        # START GAME AGAIN
         tryAgain(languageWindow)
 
+    # LANGUAGE WINDOW
     languageWindow = Toplevel()
     languageWindow.overrideredirect(True)
     languageWindow.config(bg="black", bd=0)
     languageWindow.geometry("500x220+100+100")
 
+    # LANGUAGE WINDOW LABELS AND BUTTONS
     languageLabel = Label(languageWindow, text='Choose you language', background='black', activebackground="black",
                           foreground='white', activeforeground='white', font=('arial', 15, 'bold'))
     languageLabel.grid(row=0, column=0, pady=40)
@@ -381,31 +395,36 @@ def changeLanguage():
     sinhalaButton.grid(row=1, column=1, pady=20)
     closeButton = Button(languageWindow, image=closeImage, background='black', activebackground="black",
                          foreground='white',
-                         activeforeground='white', font=('arial', 15, 'bold'), command=lambda: closeWindow(languageWindow))
+                         activeforeground='white', font=('arial', 15, 'bold'),
+                         command=lambda: closeWindow(languageWindow))
     closeButton.grid(row=1, column=2, pady=20, padx=60)
 
+
+# BACKGROUND SETTING
 def changeSound():
+    # BACKGROUND SETTING WINDOW
     soundWindow = Toplevel()
     soundWindow.overrideredirect(True)
     soundWindow.config(bg="black", bd=0)
     soundWindow.geometry("500x220+100+100")
 
-
-    languageLabel = Label(soundWindow, text="Background music", background='black', activebackground="black",
+    # BACKGROUND SOUND WINDOW LABELS AND BUTTONS
+    soundLabel = Label(soundWindow, text="Background music", background='black', activebackground="black",
                           foreground='white', activeforeground='white', font=('arial', 15, 'bold'))
-    languageLabel.grid(row=0, column=0, pady=40)
+    soundLabel.grid(row=0, column=0, pady=40)
     soundButton = Button(soundWindow, image=soundImage, background='black', activebackground="black",
-                           foreground='white', activeforeground='white', font=('arial', 15, 'bold'),
-                           command=playBackgroudMusic)
+                         foreground='white', activeforeground='white', font=('arial', 15, 'bold'),
+                         command=playBackgroundMusic)
     soundButton.grid(row=1, column=0, pady=20)
     muteButton = Button(soundWindow, image=muteImage, background='black', activebackground="black", foreground='white',
-                           activeforeground='white', font=('arial', 15, 'bold'), command=pauseBackgroundMusic)
+                        activeforeground='white', font=('arial', 15, 'bold'), command=pauseBackgroundMusic)
     muteButton.grid(row=1, column=1, pady=20)
-    closeButton = Button(soundWindow, image=closeImage, background='black', activebackground="black", foreground='white',
-                           activeforeground='white', font=('arial', 15, 'bold'), command=lambda: closeWindow(soundWindow))
-    closeButton.grid(row=1, column=2, pady=20,padx=60)
+    closeButton = Button(soundWindow, image=closeImage, background='black', activebackground="black",
+                         foreground='white',
+                         activeforeground='white', font=('arial', 15, 'bold'), command=lambda: closeWindow(soundWindow))
+    closeButton.grid(row=1, column=2, pady=20, padx=60)
 
-
+# DEFINE WRONG ANSWER FOR LIFELINES 50 AND AUDIENCE POLE
 def wrongAnswers(questionId):
     question = questionArray[questionId]
     wrongAnswersArray = []
@@ -420,7 +439,7 @@ def wrongAnswers(questionId):
 
     return wrongAnswersArray
 
-
+# MAKE WRONG ANSWER EMPTY FOR LIFELINE 50
 def optionMakeEmpty(changeId):
     if changeId == "a":
         optionOneButton.config(text="")
@@ -431,10 +450,12 @@ def optionMakeEmpty(changeId):
     if changeId == "d":
         optionFourButton.config(text="")
 
-
+# LIFELINE 50
 def lifeLine50(questionId):
+    # GET WRONG ANSWERS ARRAY
     wrongAnswersArray = wrongAnswers(questionId)
 
+    # GET RANDOMLY 2 WRONG ANSWERS FOR EMPTY
     changingId1 = randint(0, 2)
     changingId2 = None
     isChanginNotIdsSelected = True
@@ -443,15 +464,18 @@ def lifeLine50(questionId):
         if changingId1 != changingId2:
             isChanginNotIdsSelected = False
 
+    # REMOVE WRONG 2 ANSWERS
     optionMakeEmpty(wrongAnswersArray[changingId1])
     optionMakeEmpty(wrongAnswersArray[changingId2])
+    # CHANGE IMAGE AND STATE
     lifeLine50Button.config(image=image50X, state=DISABLED)
 
-
+# LIFELINE AUDIENCE POLE
 def lifeLineAudience(questionId):
-    #     # CONFIG VALUE
+    # GET WRONG ANSWERS ARRAY
     wrongAnswersArray = wrongAnswers(questionId)
 
+    # GET PROGRESS BAR VALUES RANDOMLY
     if 'a' in wrongAnswersArray:
         valueA = randint(0, 60)
     else:
@@ -469,6 +493,7 @@ def lifeLineAudience(questionId):
     else:
         valueD = randint(60, 85)
 
+    # SET PROGRESS BAR
     progressBarA.config(value=valueA)
     progressBarB.config(value=valueB)
     progressBarC.config(value=valueC)
@@ -483,22 +508,27 @@ def lifeLineAudience(questionId):
     progressBarBLabel.place(x=463, y=270)
     progressBarCLabel.place(x=503, y=270)
     progressBarDLabel.place(x=543, y=270)
-
+    # CHANGE IMAGE AND STATE
     lifeLineAudienceButton.config(image=imageAudiencePoleX, state=DISABLED)
 
-
+# LIFELINE CALL A FRIEND
 def lifeLineCall(questionId):
     phoneLabel.place(x=80, y=190)
+    # CHANGE BUTTON IMAGE AND STATE
     lifeLineCallButton.config(image=imageCallerX, state=DISABLED)
+    # PLAY RINGING MUSIC
     mixer.music.load('images/calling.mp3')
     mixer.music.play(loops=2)
+    # WAIT TILL PLAY RINGING MUSIC
     time.sleep(8)
+    # GET SPEAK FROM THE QUESTION ARRAY
     answer = questionArray[questionId]['speak']
+    # TEXT SPEECH
     engine.say(f'The answer is {answer}')
     engine.say(f'The answer is {answer}')
     engine.runAndWait()
 
-
+# QUESTION
 def addQuestion(questionId, answer):
     # HIDE PROGRESS BARS AND LABELS
     progressBarA.place_forget()
@@ -512,7 +542,9 @@ def addQuestion(questionId, answer):
     # HIDE PHONE LABEL
     phoneLabel.place_forget()
 
+    # WON
     def won():
+        # WON WINDOW
         wonWindow = Toplevel()
         wonWindow.overrideredirect(True)
         wonWindow.config(bg="black", bd=0)
@@ -520,6 +552,7 @@ def addQuestion(questionId, answer):
         imgLabel = Label(wonWindow, image=imageMiddle, bg="black")
         imgLabel.pack(pady=30)
 
+        # LABELS AND BUTTONS
         correctAnswerLabel = Label(wonWindow, text="Congratulations", font=('arial', 14, 'bold'), background='black',
                                    foreground='yellow')
         correctAnswerLabel.pack()
@@ -539,11 +572,13 @@ def addQuestion(questionId, answer):
         happyLabel.place(x=60, y=280)
         happyLabel1 = Label(wonWindow, image=happyImage, bg='black', bd=0)
         happyLabel1.place(x=360, y=280)
+
+        # PLAY WON MUSIC
         mixer.music.load('images/Kbcwon.mp3')
         mixer.music.play()
 
     def showQuestion():
-        print('showQuestion')
+        # FIND NOT SHOWED ID FROM QUESTION ARRAY RANDOMLY
         isNotAdded = True
         while isNotAdded:
             idValue = randint(0, len(questionArray) - 1)
@@ -551,8 +586,10 @@ def addQuestion(questionId, answer):
                 selectedIds.append(idValue)
                 isNotAdded = False
 
+        # RESET QUESTION AREA
         questionArea.delete(1.0, END)
         questionArea.insert(END, questionArray[idValue]['question'])
+        # LABELS AND BUTTONS
         optionOneButton.config(text=questionArray[idValue]['a'],
                                command=lambda: addQuestion(questionId=idValue, answer=questionArray[idValue]['a']))
         optionTwoButton.config(text=questionArray[idValue]['b'],
@@ -565,13 +602,15 @@ def addQuestion(questionId, answer):
         lifeLine50Button.config(command=lambda: lifeLine50(questionId=idValue))
         lifeLineAudienceButton.config(command=lambda: lifeLineAudience(questionId=idValue))
         lifeLineCallButton.config(command=lambda: lifeLineCall(questionId=idValue))
-        print(selectedIds)
 
+    # CLOSE PROGRAM
     def exit(widow):
         widow.destroy()
         root.destroy()
 
+    # GAME FAIL
     def fail(questionId):
+        # WINDOW
         failWindow = Toplevel()
         failWindow.overrideredirect(True)
         failWindow.config(bg="black", bd=0)
@@ -579,8 +618,10 @@ def addQuestion(questionId, answer):
         imgLabel = Label(failWindow, image=imageMiddle, bg="black")
         imgLabel.pack(pady=30)
 
+        # GET CORRECT ANSWER FROM QUESTION ARRAY
         correctAnswer = questionArray[questionId]['correct']
 
+        # LABELS AND BUTTONS
         correctAnswerLabel = Label(failWindow, text=correctAnswer, font=('arial', 14, 'bold'), background='black',
                                    foreground='yellow')
         correctAnswerLabel.pack()
@@ -606,44 +647,47 @@ def addQuestion(questionId, answer):
         showQuestion()
     else:
         if questionArray[questionId]['correct'] == answer:
-            print('correct answer')
             if len(selectedIds) != 2:
                 showQuestion()
             else:
                 won()
         else:
-            print("wrong answer")
             fail(questionId)
 
-
+# MAIN WINDOW
 root = Tk()
-
 root.geometry("1000x630+0+0")
 root.resizable(False, False)
 root.title("who wants to be a millionaire")
-
 root.config(background="black")
 
+# LEFT FRAME
 leftFrame = Frame(root, bg='black')
 leftFrame.grid(row=0, column=0)
 
+# TOP LEFT FRAME
 topLeftFrame = Frame(leftFrame, padx=10, bg="black")
 topLeftFrame.grid(row=0, column=0)
 
+# MIDDLE LEFT FRAME
 middleLeftFrame = Frame(leftFrame, bg="black")
 middleLeftFrame.grid(row=1, column=0)
 
+# BOTTOM LEFT FRAME
 bottomLeftFrame = Frame(leftFrame, bg="black")
 bottomLeftFrame.grid(row=2, column=0)
 
+# LANGUAGE SETTING BUTTON
 languageButton = Button(topLeftFrame, text="Change Language", background="black", foreground="white",
                         activebackground="black", activeforeground="white", command=changeLanguage)
 languageButton.grid(row=0, column=0)
 
+# BACKGROUND SOUND BUTTON
 backgroundSoundButton = Button(topLeftFrame, text="Music", background="black", foreground="white",
                                activebackground="black", activeforeground="white", command=changeSound)
 backgroundSoundButton.grid(row=0, column=1)
 
+# LIFELINE 50
 image50 = PhotoImage(file="images/50-50.png")
 image50X = PhotoImage(file="images/50-50-X.png")
 
@@ -651,6 +695,7 @@ lifeLine50Button = Button(topLeftFrame, image=image50, background="black", bd=0,
                           height=75)
 lifeLine50Button.grid(row=1, column=0)
 
+# LIFELINE AUDIENCE POLE
 imageAudiencePole = PhotoImage(file="images/audiencePole.png")
 imageAudiencePoleX = PhotoImage(file="images/audiencePoleX.png")
 
@@ -658,6 +703,7 @@ lifeLineAudienceButton = Button(topLeftFrame, image=imageAudiencePole, backgroun
                                 activebackground="black", width=170, height=75)
 lifeLineAudienceButton.grid(row=1, column=1)
 
+# LIFELINE CALLER FRIEND
 imageCaller = PhotoImage(file="images/phoneAFriend.png")
 imageCallerX = PhotoImage(file="images/phoneAFriendX.png")
 imagePhone = PhotoImage(file="images/phone.png")
@@ -666,34 +712,42 @@ lifeLineCallButton = Button(topLeftFrame, image=imageCaller, background="black",
                             width=170, height=75)
 lifeLineCallButton.grid(row=1, column=2)
 
-phoneLabel = Label(root, text='Click Here', image=imagePhone, bg='black')
+# CALL A FRIEND PHONE LABEL
+phoneLabel = Label(root, image=imagePhone, bg='black')
 
 imageMiddle = PhotoImage(file="images/center.png")
 
+# MIDDLE IMAGE LABEL
 middleLabel = Label(middleLeftFrame, image=imageMiddle, bg="black", height=250)
 middleLabel.grid(row=0, column=0)
 
+# QUESTION AREA
 imageLayout = PhotoImage(file="images/lay.png")
 
 layoutLabel = Label(bottomLeftFrame, image=imageLayout, bg="black")
 layoutLabel.grid(row=0, column=0)
 
+# QUESTION
 questionArea = Text(bottomLeftFrame, font=('arial', 16, 'bold'), bg='black', fg='white', width=35, height=2,
                     wrap='word', bd=0)
 questionArea.place(x=70, y=10)
 
+# ANSWERS
+# A================
 aLabel = Label(bottomLeftFrame, text="A: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 aLabel.place(x=55, y=110)
 optionOneButton = Button(bottomLeftFrame, bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
                          activebackground='black', activeforeground='white', cursor='hand2')
 optionOneButton.place(x=80, y=107)
 
+# B================
 bLabel = Label(bottomLeftFrame, text="B: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 bLabel.place(x=335, y=110)
 optionTwoButton = Button(bottomLeftFrame, bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
                          activebackground='black', activeforeground='white', cursor='hand2')
 optionTwoButton.place(x=360, y=107)
 
+# C================
 cLabel = Label(bottomLeftFrame, text="C: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 cLabel.place(x=55, y=190)
 optionThreeButton = Button(bottomLeftFrame, bg="black", font=('arial', 14, 'bold'), fg="white",
@@ -701,6 +755,7 @@ optionThreeButton = Button(bottomLeftFrame, bg="black", font=('arial', 14, 'bold
                            activebackground='black', activeforeground='white', cursor='hand2')
 optionThreeButton.place(x=80, y=187)
 
+# D================
 dLabel = Label(bottomLeftFrame, text="D: ", bg="black", font=('arial', 14, 'bold'), fg="white")
 dLabel.place(x=335, y=190)
 optionFourButton = Button(bottomLeftFrame, bg="black", font=('arial', 14, 'bold'), fg="white", bd=0,
@@ -718,9 +773,11 @@ progressBarBLabel = Label(root, text='B', bg="black", foreground="white", font=(
 progressBarCLabel = Label(root, text='C', bg="black", foreground="white", font=('arian', 15, 'bold'))
 progressBarDLabel = Label(root, text='D', bg="black", foreground="white", font=('arian', 15, 'bold'))
 
+# RIGHT FRAME
 rightFrame = Frame(root)
 rightFrame.grid(row=0, column=1)
 
+# RIGHT FRAME IMAGES
 amountImage0 = PhotoImage(file="images/Picture0.png")
 amountImage1 = PhotoImage(file="images/Picture1.png")
 amountImage2 = PhotoImage(file="images/Picture2.png")
@@ -738,10 +795,7 @@ amountImage13 = PhotoImage(file="images/Picture13.png")
 amountImage14 = PhotoImage(file="images/Picture14.png")
 amountImage15 = PhotoImage(file="images/Picture15.png")
 
-# SAD AND HAPPY IMAGES
-happyImage = PhotoImage(file="images/happy.png")
-sadImage = PhotoImage(file="images/sad.png")
-
+# LEFT FRAME IMAGES MAKE AS ARRAY
 amountImageArray = [
     amountImage0,
     amountImage1,
@@ -761,14 +815,21 @@ amountImageArray = [
     amountImage15
 ]
 
+# RIGHT FRAME IMAGE LABEL
 amountLabel = Label(rightFrame, bg="black")
 amountLabel.grid(row=0, column=0)
+
+# SAD AND HAPPY IMAGES
+happyImage = PhotoImage(file="images/happy.png")
+sadImage = PhotoImage(file="images/sad.png")
 
 # ADD FIRST QUESTION
 addQuestion(questionId="", answer="")
 
+# SOUND OPTION IMAGE
 soundImage = PhotoImage(file='images/sound.png')
 muteImage = PhotoImage(file='images/mute.png')
 closeImage = PhotoImage(file='images/close.png')
 
+# LOOP MAIN FRAME
 root.mainloop()
