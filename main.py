@@ -6928,7 +6928,7 @@ def addQuestion(questionId, answer):
 root = Tk()
 root.geometry("1000x630+0+0")
 root.resizable(False, False)
-root.title("who wants to be a millionaire")
+root.title("Who wants to be a millionaire")
 root.config(background="black")
 
 # LEFT FRAME
